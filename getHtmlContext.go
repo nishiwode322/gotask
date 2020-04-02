@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"github.com/PuerkitoBio/goquery"
 	"golang.org/x/text/encoding/simplifiedchinese"
 )
