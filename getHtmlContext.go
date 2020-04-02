@@ -2,33 +2,16 @@ package main
 
 import (
 	"fmt"
-	"github.com/PuerkitoBio/goquery"
-	"golang.org/x/text/encoding/simplifiedchinese"
+	"./util"
 )
 
-func decodeToGBK(text string) (string, error) {
-	dst := make([]byte, len(text)*2)
-	tr := simplifiedchinese.GB18030.NewDecoder()
-	nDst, _, err := tr.Transform(dst, []byte(text), true)
-	if err != nil {
-		return text, err
-	}
-	return string(dst[:nDst]), nil
-}
-
-func getPageContext(url string) string {
-	doc, _ := goquery.NewDocument(url)
-	doc.Find("table").Eq(10).Find("td").Each(func(i int, selection *goquery.Selection) {
-		if selection.Text() != "" {
-			result, _ := decodeToGBK(selection.Text())
-			fmt.Printf("++++++%d++++++\n", i)
-			fmt.Println(result)
-		}
-	})
-	return ""
-}
 
 func main() {
-	
-	fmt.Println(getPageContext("http://www.hotelaah.com/dijishi.html"))
+	//var provinceAndCityMap = make(map[string][]string)
+	//provinceAndCityMap["江苏"]=[]string{"南京","丹阳"}
+	//fmt.Println(provinceAndCityMap["江苏"])
+	//provinceAndCityMap["江苏"]=append(provinceAndCityMap["江苏"],"苏州")
+	//fmt.Println(provinceAndCityMap["江苏"])
+
+	fmt.Println(util.GetPageContext("http://www.hotelaah.com/dijishi.html"))
 }
