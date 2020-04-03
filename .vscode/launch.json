@@ -9,7 +9,7 @@
             "type": "go",
             "request": "launch",
             "mode": "debug",
-            "program": "C:/Users/admin/Desktop/go for test/helloword.go",
+            "program": "C:/Users/admin/Desktop/go for test/mainTask.go",
             "env": {},
             "args": []
         }
