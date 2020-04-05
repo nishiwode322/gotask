@@ -6,16 +6,16 @@ import (
 	"net/http"
 )
 
-func echohandler(writer http.ResponseWriter, read *http.Request) {
-	clientdata, _ := ioutil.ReadAll(read.Body)
-	fmt.Println("server receive data:", clientdata)
-	writer.Write(clientdata)
+func echoHandler(writer http.ResponseWriter, read *http.Request) {
+	clientData, _ := ioutil.ReadAll(read.Body)
+	fmt.Println("server receive data:", clientData)
+	writer.Write(clientData)
 }
 
-func EchoServer(ipandport string) {
-	http.HandleFunc("/", echohandler)
-	fmt.Println("echo server is listening:" + ipandport)
-	if err := http.ListenAndServe(ipandport, nil); err != nil {
-		fmt.Println(err)
+func EchoServer(ipAndPort string) {
+	http.HandleFunc("/", echoHandler)
+	fmt.Println("echo server is listening:" + ipAndPort)
+	if err := http.ListenAndServe(ipAndPort, nil); err != nil {
+		fmt.Println("ListenAndServe err! ", err)
 	}
 }
