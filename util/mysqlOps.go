@@ -7,13 +7,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-//TODO:
-type database interface {
-	Init() error
-	Open() error
-	/*.....*/
-}
-
 func RunMysqlSample() {
 	db, _ := sql.Open("mysql", "root:123456@(127.0.0.1:3306)/provincecity")
 	defer db.Close()
