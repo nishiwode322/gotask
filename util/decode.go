@@ -1,7 +1,11 @@
 package util
 
 import (
+	"bytes"
+	"io/ioutil"
+
 	"golang.org/x/text/encoding/simplifiedchinese"
+	"golang.org/x/text/transform"
 )
 
 func DecodeGBK(text string) (string, error) {
@@ -12,4 +16,9 @@ func DecodeGBK(text string) (string, error) {
 		return text, err
 	}
 	return string(result[:transformSize]), nil
+}
+
+func DecodeUTF(text string) ([]byte, error) {
+	gb := simplifiedchinese.All[0]
+	return ioutil.ReadAll(transform.NewReader(bytes.NewReader([]byte(text)), gb.NewEncoder()))
 }
