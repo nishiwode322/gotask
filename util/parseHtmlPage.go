@@ -3,15 +3,18 @@ package util
 import (
 	"errors"
 	"fmt"
+	"sort"
+	"strings"
 	"sync"
 
 	"github.com/PuerkitoBio/goquery"
 )
 
-var BaseURL string = "http://www.hotelaah.com/"
-
-func ParseProvinceAndCity(url string) (map[string][]string, error) {
-	result := make(map[string][]string)
+func ParseProvinceAndCity(url string) (map[string]CityList, error) {
+	result := make(map[string]CityList)
+	//get base url
+	index := strings.LastIndex(url, "/")
+	baseURL := url[:index+1]
 	wg := sync.WaitGroup{}
 	wg.Add(27)
 	doc, err := goquery.NewDocument(url)
@@ -24,12 +27,12 @@ func ParseProvinceAndCity(url string) (map[string][]string, error) {
 			provinceName, _ := DecodeGBK(selection.Text())
 			fmt.Println(provinceName)
 			if i == 1 || i == 2 || i == 24 || i == 26 || i == 31 || i == 32 || i == 33 {
-				result[provinceName] = []string{provinceName}
+				result[provinceName] = CityList{provinceName}
 			} else {
 				//get suburl
 				tempURL, _ := selection.Attr("href")
-				subURL := BaseURL + tempURL
-				result[provinceName] = []string{}
+				subURL := baseURL + tempURL
+				result[provinceName] = CityList{}
 				go parseCity(subURL, provinceName, &result, &wg)
 			}
 		}
@@ -38,8 +41,8 @@ func ParseProvinceAndCity(url string) (map[string][]string, error) {
 	return result, nil
 }
 
-func parseCity(url string, provinceName string, provinceCity *map[string][]string, waitGroup *sync.WaitGroup) {
-	result := []string{}
+func parseCity(url string, provinceName string, provinceCity *map[string]CityList, waitGroup *sync.WaitGroup) {
+	result := CityList{}
 	doc, _ := goquery.NewDocument(url)
 	doc.Find("table").Eq(10).Find("td").Each(func(i int, selection *goquery.Selection) {
 		if i == 3 || i == 4 {
@@ -53,6 +56,9 @@ func parseCity(url string, provinceName string, provinceCity *map[string][]strin
 			})
 		}
 	})
+	//sort by pinyin
+	sort.Sort(result)
+
 	(*provinceCity)[provinceName] = result
 	waitGroup.Done()
 }
