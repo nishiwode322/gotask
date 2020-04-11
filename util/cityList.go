@@ -1,5 +1,7 @@
 package util
 
+import "strings"
+
 type CityList []string
 
 func (c CityList) Len() int {
@@ -23,4 +25,12 @@ func (c CityList) Less(i, j int) bool {
 
 func (c CityList) Swap(i, j int) {
 	c[i], c[j] = c[j], c[i]
+}
+
+func (c CityList) EncodeString() string {
+	return strings.Join(c, ",")
+}
+
+func (c CityList) DecodeString(str string) {
+	c = strings.Split(str, ",")
 }

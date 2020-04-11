@@ -2,17 +2,21 @@ package util
 
 import (
 	"fmt"
-	"strings"
 	"sync"
 
 	"github.com/Shopify/sarama"
 )
 
-type kafkaops struct {
+type KafkaOps struct {
 	BrokerAddress []string
 }
 
-func (k kafkaops) SyncSendMessage(config *sarama.Config, messages []*sarama.ProducerMessage) {
+type MessageValue interface {
+	EncodeString() string
+	DecodeString(string)
+}
+
+func (k KafkaOps) SyncSendMessage(config *sarama.Config, messages []*sarama.ProducerMessage) {
 	client, err := sarama.NewSyncProducer(k.BrokerAddress, config)
 	if err != nil {
 		fmt.Println("producer close err! ", err)
@@ -33,7 +37,7 @@ func (k kafkaops) SyncSendMessage(config *sarama.Config, messages []*sarama.Prod
 	}
 }
 
-func (k kafkaops) ReceiveMessage(topic string, config *sarama.Config, data chan<- *sarama.ConsumerMessage) {
+func (k KafkaOps) ReceiveMessage(topic string, config *sarama.Config, data chan<- *sarama.ConsumerMessage) {
 	var wg sync.WaitGroup
 	consumer, err := sarama.NewConsumer(k.BrokerAddress, config)
 	if err != nil {
@@ -77,14 +81,26 @@ func (k kafkaops) ReceiveMessage(topic string, config *sarama.Config, data chan<
 	wg.Wait()
 }
 
+func FillMessageStruct(topic string, key string, value MessageValue) *sarama.ProducerMessage {
+	msg := &sarama.ProducerMessage{}
+	msg.Topic = topic
+	msg.Key = sarama.StringEncoder(key)
+	msg.Value = sarama.StringEncoder(value.EncodeString())
+	return msg
+}
+
 func RunKafkaSample() {
 	//broker address: "localhost:9092"
 	// set message content
-	msg := &sarama.ProducerMessage{}
-	msg.Topic = "ProvinceCity"
-	msg.Key = sarama.StringEncoder("江苏")
-	var valueString = strings.Join([]string{"南京", "苏州"}, ",")
-	msg.Value = sarama.StringEncoder(valueString)
+	/*
+		msg := &sarama.ProducerMessage{}
+		msg.Topic = "ProvinceCity"
+		msg.Key = sarama.StringEncoder("江苏")
+		var valueString = strings.Join([]string{"南京", "苏州"}, ",")
+		msg.Value = sarama.StringEncoder(valueString)
+	*/
+
+	msg := FillMessageStruct("ProvinceCity", "江苏", CityList{"南京", "苏州"})
 
 	config := sarama.NewConfig()
 	// WaitForAll waits for all in-sync replicas to commit before responding
@@ -93,7 +109,7 @@ func RunKafkaSample() {
 	config.Producer.Partitioner = sarama.NewRandomPartitioner
 	config.Producer.Return.Successes = true
 
-	ko := kafkaops{[]string{"localhost:9092"}}
+	ko := KafkaOps{[]string{"localhost:9092"}}
 	ko.SyncSendMessage(config, []*sarama.ProducerMessage{msg})
 
 	fmt.Println("consumer start")
