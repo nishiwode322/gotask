@@ -10,61 +10,63 @@ import (
 )
 
 type MysqlOps struct {
-	userName   string
-	passWord   string
-	ip         string
-	port       string
-	dataBase   string
-	dbInstance *sql.DB
+	UserName   string
+	PassWord   string
+	Ip         string
+	Port       string
+	DataBase   string
+	DbInstance *sql.DB
 }
 
 func (m MysqlOps) Open() error {
-	sourceName := fmt.Sprintf("%s:%s@(%s:%s)/%s", m.userName, m.passWord, m.ip, m.port, m.dataBase)
+	sourceName := fmt.Sprintf("%s:%s@(%s:%s)/%s", m.UserName, m.PassWord, m.Ip, m.Port, m.DataBase)
 	db, err := sql.Open("mysql", sourceName)
-	m.dbInstance = db
+	if err != nil {
+		m.DbInstance = db
+	}
 	return err
 }
 
 func (m MysqlOps) Close() error {
-	if m.dbInstance == nil {
+	if m.DbInstance == nil {
 		return nil
 	}
-	return m.dbInstance.Close()
+	return m.DbInstance.Close()
 }
 
 func (m MysqlOps) Exec(s string) (sql.Result, error) {
-	if m.dbInstance == nil {
-		return nil, errors.New("mysqlops.dbInstance is nil")
+	if m.DbInstance == nil {
+		return nil, errors.New("mysqlops.DbInstance is nil")
 	}
-	return m.dbInstance.Exec(s)
+	return m.DbInstance.Exec(s)
 }
 
 func (m MysqlOps) Ping() error {
-	if m.dbInstance == nil {
-		return errors.New("mysqlops.dbInstance is nil")
+	if m.DbInstance == nil {
+		return errors.New("mysqlops.DbInstance is nil")
 	}
-	return m.dbInstance.Ping()
+	return m.DbInstance.Ping()
 }
 
 func (m MysqlOps) Query(s string) (*sql.Rows, error) {
-	if m.dbInstance == nil {
-		return nil, errors.New("mysqlops.dbInstance is nil")
+	if m.DbInstance == nil {
+		return nil, errors.New("mysqlops.DbInstance is nil")
 	}
-	return m.dbInstance.Query(s)
+	return m.DbInstance.Query(s)
 }
 
 func (m MysqlOps) QueryRow(s string) *sql.Row {
-	if m.dbInstance == nil {
+	if m.DbInstance == nil {
 		return nil
 	}
-	return m.dbInstance.QueryRow(s)
+	return m.DbInstance.QueryRow(s)
 }
 
 func (m MysqlOps) Prepare(s string) (*sql.Stmt, error) {
-	if m.dbInstance == nil {
-		return nil, errors.New("mysqlops.dbInstance is nil")
+	if m.DbInstance == nil {
+		return nil, errors.New("mysqlops.DbInstance is nil")
 	}
-	return m.dbInstance.Prepare(s)
+	return m.DbInstance.Prepare(s)
 }
 
 /*
@@ -78,8 +80,8 @@ func (m MysqlOps) Prepare(s string) (*sql.Stmt, error) {
 *error
  */
 func (m MysqlOps) BatchInserts(table string, fields []string, values [][]interface{}) (sql.Result, error) {
-	if m.dbInstance == nil {
-		return nil, errors.New("mysqlops.dbInstance is nil")
+	if m.DbInstance == nil {
+		return nil, errors.New("mysqlops.DbInstance is nil")
 	}
 
 	keyValueFormatStrings := []string{}

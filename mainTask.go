@@ -1,8 +1,6 @@
 package main
 
-import (
-	"./util"
-)
+import "fmt"
 
 func main() {
 
@@ -22,15 +20,6 @@ func main() {
 			fmt.Println(provinceCityMap)
 		}
 	*/
-
-	//3.just some function test
-	//3.1 test go connect kafka
-	/*
-		util.RunKafkaSample()
-	*/
-
-	//3.2 test go connect mysql
-	util.RunMysqlSample()
-
-	//3.3 TODO: go connect redis
+	fmt.Println("start task1")
+	task1()
 }
