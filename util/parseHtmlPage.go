@@ -33,7 +33,7 @@ func ParseProvinceAndCity(url string) (map[string]CityList, error) {
 				tempURL, _ := selection.Attr("href")
 				subURL := baseURL + tempURL
 				result[provinceName] = CityList{}
-				go parseCity(subURL, provinceName, &result, &wg)
+				go parseCity(subURL, provinceName, result, &wg)
 			}
 		}
 	})
@@ -41,7 +41,7 @@ func ParseProvinceAndCity(url string) (map[string]CityList, error) {
 	return result, nil
 }
 
-func parseCity(url string, provinceName string, provinceCity *map[string]CityList, waitGroup *sync.WaitGroup) {
+func parseCity(url string, provinceName string, provinceCity map[string]CityList, waitGroup *sync.WaitGroup) {
 	result := CityList{}
 	doc, _ := goquery.NewDocument(url)
 	doc.Find("table").Eq(10).Find("td").Each(func(i int, selection *goquery.Selection) {
@@ -59,6 +59,7 @@ func parseCity(url string, provinceName string, provinceCity *map[string]CityLis
 	//sort by pinyin
 	sort.Sort(result)
 
-	(*provinceCity)[provinceName] = result
-	waitGroup.Done()
+	provinceCity[provinceName] = result
+
+	defer waitGroup.Done()
 }

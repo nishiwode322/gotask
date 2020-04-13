@@ -27,10 +27,11 @@ func (c CityList) Swap(i, j int) {
 	c[i], c[j] = c[j], c[i]
 }
 
+// for MessageValue interface
 func (c CityList) EncodeString() string {
 	return strings.Join(c, ",")
 }
 
-func (c CityList) DecodeString(str string) {
-	c = strings.Split(str, ",")
+func (c *CityList) DecodeString(str string) {
+	*c = strings.Split(str, ",")
 }

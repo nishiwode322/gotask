@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
 
@@ -16,10 +18,10 @@ func main() {
 		if err != nil {
 			fmt.Println(err)
 		} else {
-			fmt.Println("—————————————")
 			fmt.Println(provinceCityMap)
 		}
 	*/
-	fmt.Println("start task1")
+	fmt.Println("start task")
 	task1()
+
 }

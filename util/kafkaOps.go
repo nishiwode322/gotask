@@ -99,8 +99,7 @@ func RunKafkaSample() {
 		var valueString = strings.Join([]string{"南京", "苏州"}, ",")
 		msg.Value = sarama.StringEncoder(valueString)
 	*/
-
-	msg := FillMessageStruct("ProvinceCity", "江苏", CityList{"南京", "苏州"})
+	msg := FillMessageStruct("ProvinceCity", "江苏", &CityList{"南京", "苏州"})
 
 	config := sarama.NewConfig()
 	// WaitForAll waits for all in-sync replicas to commit before responding

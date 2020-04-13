@@ -12,17 +12,18 @@ func task1() {
 	// parse province and city information
 	provinceCityMap, err := util.ParseProvinceAndCity("http://www.hotelaah.com/dijishi.html")
 	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println("parse province city success")
+		fmt.Println("parse province city err ", err)
+		return
 	}
+	fmt.Println("parse province city success")
+
 	//set kafka producer messages struct
 	messageList := []*sarama.ProducerMessage{}
 	for province := range provinceCityMap {
-		msg := util.FillMessageStruct("ProvinceCity", province, provinceCityMap[province])
+		tmp := provinceCityMap[province]
+		msg := util.FillMessageStruct("ProvinceCity", province, &tmp)
 		messageList = append(messageList, msg)
 	}
-	//msg := util.FillMessageStruct("ProvinceCity", "江苏", util.CityList{"南京", "苏州"})
 
 	//set kafka producer config
 	config := sarama.NewConfig()
@@ -42,13 +43,12 @@ func task1() {
 	go ko.ReceiveMessage("ProvinceCity", nil, dataChannel)
 
 	//init mysql
-	mo := util.MysqlOps{UserName: "root", PassWord: "123456", Ip: "127.0.0.1", Port: "3306", DataBase: "provincecity"}
-	err = mo.Open()
+	db := util.MysqlOps{UserName: "root", PassWord: "123456", IP: "127.0.0.1", Port: "3306", DataBase: "provincecity"}
+	err = db.Open()
 	if err != nil {
 		fmt.Println("database instance create err!")
 		return
 	}
-	db := mo
 	defer db.Close()
 	err = db.Ping()
 	if err != nil {
@@ -69,7 +69,6 @@ func task1() {
 	provinceCount = 0
 	//handle messages from kafka
 	for item := range dataChannel {
-		fmt.Printf("key: %s, text: %s, offset: %d\n", string(item.Key), string(item.Value), item.Offset)
 
 		value := util.CityList{}
 		value.DecodeString(string(item.Value))
@@ -81,7 +80,7 @@ func task1() {
 			fmt.Println("insert province sql err! ", err, sql)
 		}
 
-		//number of record add 1
+		//number of records add 1
 		provinceCount++
 
 		valueList := [][]interface{}{}
