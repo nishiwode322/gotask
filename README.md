@@ -1,3 +1,1 @@
-
-1.实现一个go http echo server
-2.解析中国省、城市，将结果保存到map
+task1.解析中国的省市，将结果放到kafka中，然后从kafka中读取 同步到mysql和redis中
