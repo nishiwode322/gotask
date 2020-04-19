@@ -9,7 +9,7 @@
             "type": "go",
             "request": "launch",
             "mode": "debug",
-            "program": "C:/Users/admin/Desktop/go for test/mainTask.go",
+            "program": "C://Users//admin//Desktop//gotask/",
             "env": {},
             "args": []
         }

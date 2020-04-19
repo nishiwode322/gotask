@@ -1,14 +1,15 @@
-package main
+package task
 
 import (
 	"fmt"
 
-	"./util"
+	"gotask/util"
+
 	"github.com/Shopify/sarama"
 	"github.com/garyburd/redigo/redis"
 )
 
-func task1() {
+func Task1() {
 	// parse province and city information
 	provinceCityMap, err := util.ParseProvinceAndCity("http://www.hotelaah.com/dijishi.html")
 	if err != nil {

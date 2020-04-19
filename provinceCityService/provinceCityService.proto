@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+// The ProvinceCityService service definition
+service ProvinceCityService {
+
+    rpc GetCityByProvince(stream SelectByKeyRequest) returns (stream SelectByKeyReponse) {}
+
+    rpc SetCityAndProvince(stream SetKeyValueRequest) returns (SetKeyValueReponse) {}
+
+    rpc DeleteCity(stream DeleteKeyRequest) returns (DeleteKeyReponse) {}
+
+    rpc DeleteProvince(stream DeleteKeyRequest) returns (DeleteKeyReponse) {}
+}
+
+// message definition
+message SetKeyValueRequest{
+    string cityName = 1;
+    string provinceName = 2;
+}
+
+message SetKeyValueReponse{
+    bool reponse = 1;
+}
+//
+message SelectByKeyRequest{
+    string provinceName=1;
+}
+message SelectByKeyReponse{
+    string cityName = 1;
+}
+
+//keyName:cityName or provinceName
+message DeleteKeyRequest{
+    string keyName = 1;
+}
+message DeleteKeyReponse{
+    bool reponse = 1;
+}

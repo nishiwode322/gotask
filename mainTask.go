@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	t "gotask/task"
 )
 
 func main() {
@@ -22,6 +23,5 @@ func main() {
 		}
 	*/
 	fmt.Println("start task")
-	task1()
-
+	t.Task1()
 }
