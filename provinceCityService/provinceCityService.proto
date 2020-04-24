@@ -8,8 +8,6 @@ service ProvinceCityService {
     rpc SetCityAndProvince(stream SetKeyValueRequest) returns (SetKeyValueReponse) {}
 
     rpc DeleteCity(stream DeleteKeyRequest) returns (DeleteKeyReponse) {}
-
-    rpc DeleteProvince(stream DeleteKeyRequest) returns (DeleteKeyReponse) {}
 }
 
 // message definition
@@ -19,20 +17,17 @@ message SetKeyValueRequest{
 }
 
 message SetKeyValueReponse{
-    bool reponse = 1;
 }
 //
 message SelectByKeyRequest{
     string provinceName=1;
 }
 message SelectByKeyReponse{
-    string cityName = 1;
+    repeated string cityName = 1;
 }
 
-//keyName:cityName or provinceName
 message DeleteKeyRequest{
     string keyName = 1;
 }
 message DeleteKeyReponse{
-    bool reponse = 1;
 }

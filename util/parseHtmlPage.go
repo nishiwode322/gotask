@@ -3,7 +3,6 @@ package util
 import (
 	"errors"
 	"fmt"
-	"sort"
 	"strings"
 	"sync"
 
@@ -43,7 +42,10 @@ func ParseProvinceAndCity(url string) (map[string]CityList, error) {
 
 func parseCity(url string, provinceName string, provinceCity map[string]CityList, waitGroup *sync.WaitGroup) {
 	result := CityList{}
-	doc, _ := goquery.NewDocument(url)
+	doc, err := goquery.NewDocument(url)
+	if err != nil {
+		return
+	}
 	doc.Find("table").Eq(10).Find("td").Each(func(i int, selection *goquery.Selection) {
 		if i == 3 || i == 4 {
 			targetSelection := selection.Find("a")
@@ -56,9 +58,6 @@ func parseCity(url string, provinceName string, provinceCity map[string]CityList
 			})
 		}
 	})
-	//sort by pinyin
-	sort.Sort(result)
-
 	provinceCity[provinceName] = result
 
 	defer waitGroup.Done()

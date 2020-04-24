@@ -115,9 +115,17 @@ func RunMysqlSample() {
 		fmt.Println("database connect err! ", err)
 		return
 	}
+	/*
+		fieldsList := []string{"city_id", "city_name"}
+		fieldValues := [][]interface{}{{0, "a"}, {0, "b"}}
+		db.BatchInserts("city", fieldsList, fieldValues)
+		//output:insert into city (city_id,city_name) values (0,'a'),(0,'b')
+	*/
+	row := db.QueryRow("select province_id from city where city_name = 'a'")
 
-	fieldsList := []string{"city_id", "city_name"}
-	fieldValues := [][]interface{}{{0, "a"}, {0, "b"}}
-	db.BatchInserts("city", fieldsList, fieldValues)
-	//output:insert into city (city_id,city_name) values (0,'a'),(0,'b')
+	err = row.Scan()
+	if err != nil {
+		fmt.Println("h")
+		return
+	}
 }

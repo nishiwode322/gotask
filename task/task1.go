@@ -93,23 +93,15 @@ func Task1() {
 		if err != nil {
 			fmt.Println("insert city sql err! ", err)
 		}
-		/*
-				batch inserts
 
-			keyValueFormatStrings := []string{}
-			for _, x := range value {
-				tmp := fmt.Sprintf("(0,'%s')", x)
-				keyValueFormatStrings = append(keyValueFormatStrings, tmp)
-			}
-			valueSql := "insert into province values " + strings.Join(keyValueFormatStrings, ",")
-			result, err := db.Exec(valueSql)
-			n, _ := result.RowsAffected()
-			fmt.Println("affected row number is:", n)
-		*/
-
+		//change to GBK encode
+		for i, v := range value {
+			t, _ := util.DecodeUTF(v)
+			value[i] = string(t)
+		}
 		//sync redis
-		for index, i := range value {
-			reply, err := conn.Do("zadd", string(item.Key), index, i)
+		for _, v := range value {
+			reply, err := conn.Do("zadd", string(item.Key), 0, v)
 			fmt.Printf("reply=%#v,err=%v\n", reply, err)
 		}
 	}
