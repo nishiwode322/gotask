@@ -20,9 +20,6 @@ type EmailParam struct {
 	CCers string
 }
 
-var serverHost, fromEmail, fromPasswd string
-var serverPort int
-
 func InitEmail(ep *EmailParam, m *gomail.Message) {
 
 	toers := []string{}
