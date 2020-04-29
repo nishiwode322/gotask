@@ -91,7 +91,7 @@ func RunGrpcClient() {
 	// set up a connection to the RPC server
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
-		log.Fatal("connect server err , %v", err)
+		log.Fatal("connect server err,", err)
 	}
 	defer conn.Close()
 }
