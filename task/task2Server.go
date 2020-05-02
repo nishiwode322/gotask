@@ -158,7 +158,7 @@ func (s *Server) DeleteCity(stream pb.ProvinceCityService_DeleteCityServer) erro
 }
 
 func RunGrpcServer() {
-	listener, err := net.Listen("tcp", ":60051")
+	listener, err := net.Listen("tcp", ":50051")
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
